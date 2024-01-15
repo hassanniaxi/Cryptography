@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ceaser Cipher</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+	<div id="container">
+        <h1><b>Caesar Cipher</b></h1>
+        <input type="password" id="f" placeholder="Enter value of A"><br>
+        <input type="password" id="s" placeholder="Enter value of B"><br>    
+        <input type="text" id="m" placeholder="Enter Message"><br><br>
+        <button onclick="encryptMessage()">Encrypt Message</button>
+        <button onclick="decryptMessage()">Decrypt Message</button>
+        <h3 id="encrypted-message"></h3>
+        <h3 id="decrypted-message"></h3>
+        <a href="ceasercipher.html"><button>Retry</button></a>
+        <a href="index.html"><button id="back">Home</button></a>
+    </div>
+</body>
+<script>
+const listLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789!@#$%^&*()-_+={}[]|\\:;\'<>,.?/ ';
+
+function textToASCII(text) {
+    const asciiArray = [];
+    for (let i = 0; i < text.length; i++) {
+        const character = text.charAt(i);
+        const charCode = text.charCodeAt(i);
+        asciiArray.push({ character, ascii: charCode });
+    }
+    return asciiArray;
+}
+
+function encryptText(inputText, a, b) {
+    let encryptedText = '';
+
+    for (const letter of inputText) {
+        if (!listLetters.includes(letter)) {
+            encryptedText += letter;
+            continue;
+        }
+
+        const indexLetter = listLetters.indexOf(letter);
+        let newIndexLetter = ((a * indexLetter) + b) % listLetters.length;
+
+        if (newIndexLetter < 0) {
+            newIndexLetter += listLetters.length;
+        }
+
+        encryptedText += listLetters[newIndexLetter];
+    }
+
+    return encryptedText;
+}
+
+function decryptText(encryptedText, a, b) {
+    let decryptedText = '';
+
+    let aInverse = modInverse(a, listLetters.length);
+
+    if (aInverse === -1) {
+        // a doesn't have a multiplicative inverse modulo listLetters.length, decryption not possible.
+        return 'Decryption not possible.';
+    }
+
+    for (const letter of encryptedText) {
+        if (!listLetters.includes(letter)) {
+            decryptedText += letter;
+            continue;
+        }
+
+        const indexLetter = listLetters.indexOf(letter);
+        let newIndexLetter = (aInverse * (indexLetter - b) + listLetters.length) % listLetters.length;
+
+        if (newIndexLetter < 0) {
+            newIndexLetter += listLetters.length;
+        }
+
+        decryptedText += listLetters[newIndexLetter];
+    }
+
+    return decryptedText;
+}
+
+
+function modInverse(a, m) {
+    a = ((a % m) + m) % m; // Ensure a is positive
+
+    for (let x = 1; x < m; x++) {
+        if ((a * x) % m === 1) {
+            return x;
+        }
+    }
+
+    return -1; // Inverse does not exist
+}
+
+function preventNonNumericKeys(event) {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+        event.preventDefault();
+    }
+}
+
+function encryptMessage() {
+    const inputValue = document.getElementById('m').value;
+    const keyValue1 = parseInt(document.getElementById('f').value);
+    const keyValue2 = parseInt(document.getElementById('s').value);
+    const encryptedText = encryptText(inputValue, keyValue1, keyValue2);
+
+    document.getElementById('encrypted-message').innerHTML = "Encrypted Message: " + encryptedText;
+}
+
+function decryptMessage() {
+    const inputValue = document.getElementById('m').value;
+    const keyValue1 = parseInt(document.getElementById('f').value);
+    const keyValue2 = parseInt(document.getElementById('s').value);
+
+    const decryptedText = decryptText(inputValue, keyValue1, keyValue2);
+
+    document.getElementById('encrypted-message').innerHTML = "Decrypted Message: " + decryptedText;
+}
+
+
+
+</script>
+</html>

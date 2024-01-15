@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Atbash Cipher</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <h1><b>Atbash Cipher</b></h1>
+        <input type="text" id="m" placeholder="Enter Message"><br><br>
+        <button onclick="encryptMessage()">Encrypt Message</button>
+        <button onclick="decryptMessage()">Decrypt Message</button>
+        <h3 id="encrypted-message"></h3>
+        <h3 id="decrypted-message"></h3>
+        <button onclick="retry()">Retry</button>
+        <a href="index.html"><button id="back">Home</button></a>
+    </div>
+
+    <script>
+        function atbashCipher(input) {
+            const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+            const reversedAlphabet = alphabet.split('').reverse().join('');
+
+            function applyCipher(text, map) {
+                return text.toLowerCase().split('').map(char => {
+                    const index = alphabet.indexOf(char);
+                    return index !== -1 ? map[index] : char;
+                }).join('');
+            }
+
+            let result;
+
+            result = applyCipher(input, reversedAlphabet);
+
+            return result;
+        }
+
+        function encryptMessage() {
+            const userInput = document.getElementById('m').value;
+            const encryptedText = atbashCipher(userInput);
+            document.getElementById("encrypted-message").innerHTML = "Encrypted Message: " + encryptedText;
+        }
+
+        function decryptMessage() {
+            const userInput = document.getElementById('m').value;
+            const decryptedText = atbashCipher(userInput);
+            document.getElementById("decrypted-message").innerHTML = "Decrypted Message: " + decryptedText;
+        }
+
+        function retry() {
+            document.getElementById('m').value = '';
+            document.getElementById("encrypted-message").innerHTML = '';
+            document.getElementById("decrypted-message").innerHTML = '';
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hashing SHA-256</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div id="container">
+        <h1><b>Hashing SHA-256</b></h1>
+        <input type="text" id="m" placeholder="Enter Message"><br><br>
+        <button onclick="hashing()">Hash</button>
+        <h3 id="hash-message"></h3>
+        <button onclick="index.html">Retry</button>
+        <a href="index.html"><button id="back">Home</button></a>
+    
+    <br><br>
+    <p class="footer"><i><b> Note: </b></i> Reversing a hash back to the original text is not a straightforward process because hashing is designed to be a one-way function.</p>
+</div>
+    <script>
+        async function getSHA(input) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(input);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            return hashBuffer;
+        }
+
+        function toHexString(hash) {
+            const byteArray = new Uint8Array(hash);
+            const hexArray = Array.from(byteArray, byte => byte.toString(16).padStart(2, '0'));
+            return hexArray.join('');
+        }
+
+        function hashing() {
+            const userInput = document.getElementById('m').value;
+            getSHA(userInput).then(hashBuffer => {
+                const hashsha256 = toHexString(hashBuffer);
+                document.getElementById("hash-message").innerHTML = "hashed Message: " + hashsha256;
+            });
+        }
+    </script>
+</body>
+</html>

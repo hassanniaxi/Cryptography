@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fence Rails Cipher</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body>
+    <div id="container">
+        <h1><b>Fence Rails Cipher</b></h1>
+        <input type="text" id="m" placeholder="Enter Message"><br>
+        <input type="password" id="s" placeholder="Enter Depth" ><br><br>
+        <button onclick="encrypt_message()">Encrypt Message</button>
+        <button onclick="decrypt_message()">Decrypt Message</button>
+        <h3 id="encrypted-message"></h3>
+        <h3 id="decrypted-message"></h3>
+        <a href="fencerails.html"><button>Retry</button></a>
+        <a href="index.html"><button id="back">Home</button></a>
+    </div>
+
+    <script>
+
+function encrypt_message() {
+    const userInput = document.getElementById('m').value;
+    const railCount = parseInt(document.getElementById("s").value);
+    
+    let rails = [];
+    for (let i = 0; i < railCount; i++) {
+        rails.push([]);
+    }
+
+    let railIndex = 0;
+    let direction = 1;
+
+    for (let i = 0; i < userInput.length; i++) {
+        rails[railIndex].push(userInput[i]);
+        railIndex += direction;
+
+        if (railIndex === railCount - 1 || railIndex === 0) {
+            direction = -direction;
+        }
+    }
+
+    const encryptedText = rails.flat().join('');
+    document.getElementById("encrypted-message").innerHTML = "Encrypted Message: " + encryptedText;
+}
+
+function decrypt_message() {
+    const userInput = document.getElementById('m').value;
+    const railCount = parseInt(document.getElementById("s").value);
+    
+    let rails = [];
+    for (let i = 0; i < railCount; i++) {
+        rails.push([]);
+    }
+
+    let railIndex = 0;
+    let direction = 1;
+
+    for (let i = 0; i < userInput.length; i++) {
+        rails[railIndex].push(' ');
+        railIndex += direction;
+
+        if (railIndex === railCount - 1 || railIndex === 0) {
+            direction = -direction;
+        }
+    }
+
+    let index = 0;
+    for (let i = 0; i < railCount; i++) {
+        for (let j = 0; j < rails[i].length; j++) {
+            rails[i][j] = userInput[index++];
+        }
+    }
+
+    railIndex = 0;
+    direction = 1;
+    let decryptedText = '';
+
+    for (let i = 0; i < userInput.length; i++) {
+        decryptedText += rails[railIndex].shift();
+        railIndex += direction;
+
+        if (railIndex === railCount - 1 || railIndex === 0) {
+            direction = -direction;
+        }
+    }
+
+    document.getElementById("decrypted-message").innerHTML = "Decrypted Message: " + decryptedText;
+}
+
+    </script>
+</body>
+</html>
